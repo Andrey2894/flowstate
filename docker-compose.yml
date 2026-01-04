@@ -26,3 +26,35 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
     depends_on:
       - kafka
+
+  producer-db:
+    image: postgres:15
+    container_name: flowstate-producer-db
+    ports:
+      - "5430:5432"
+    environment:
+      - POSTGRES_DB=transaction_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+  consumer-db:
+    image: postgres:15
+    container_name: flowstate-consumer-db
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_DB=bonus_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: flowstate-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - producer-db
+      - consumer-db
